@@ -8,6 +8,7 @@ class Contact:
 class AddressBook:
     def __init__(self):
         self.contacts = []
+        self.contacts = self.load_from_disk("contactlist.json")
 
     def add_contact(self, name, phone):
         self.contacts.append(Contact(name, phone))
@@ -17,12 +18,14 @@ class AddressBook:
         with open(filename, "w") as file:
             json.dump(data, file)
 
-    def load_from_disk(self, filename):
+    @staticmethod
+    def load_from_disk(filename):
         with open(filename, "r") as file:
             data = json.load(file)
             
-            self.contacts = [Contact(entry["name"], entry["phone"]) for entry in data]
-
+            #self.contacts = [Contact(entry["name"], entry["phone"]) for entry in data]
+        return [Contact(entry["name"], entry["phone"]) for entry in data]
+    
     def find_by_part(self, search_string):
         findings = []
 
@@ -37,7 +40,7 @@ class AddressBook:
 
 
 address_book = AddressBook()
-address_book.load_from_disk("contactlist.json")
+#address_book.load_from_disk("contactlist.json")
 # address_book.add_contact("John Doe", "123-456-7890")
 # address_book.add_contact("Jane Smith", "987-654-3210")
 for el in address_book.find_by_part("Sm"):
